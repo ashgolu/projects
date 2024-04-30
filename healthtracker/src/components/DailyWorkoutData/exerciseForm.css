@@ -1,0 +1,21 @@
+#container {
+    max-width: 720px;
+    display: flex;
+    flex-direction: column;
+}
+.Form{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.AddDataBtn{
+    margin: 2% auto 0% auto;
+}
+#exercise,#time,#reps,#weight,.form-control {
+    width: 250px;
+    height: 37px;
+    padding: 0%;
+}
+.form-group{
+    margin: auto;
+}

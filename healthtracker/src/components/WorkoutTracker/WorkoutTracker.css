@@ -1,0 +1,17 @@
+.Exercises{
+    text-align: center;
+    margin: auto;
+}
+.container{
+    display: flex;
+    justify-content: center;
+}
+.inputGroup{
+    max-width: 50%;
+}
+.tableList table{
+    all: unset;
+}
+.tableList{
+    justify-content: center;
+}
