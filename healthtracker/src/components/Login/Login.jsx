@@ -19,15 +19,24 @@ const LoginForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post('http://localhost:3001/login', {
-    email,password})
+    axios({
+      method: 'post',
+      url: 'http://localhost:3001/login',
+      data: {
+        email,
+        password
+      },
+      withCredentials: true // Include credentials
+    })
     .then(response => {
-      if (response.data === 'success') {
-        console.log('Login successful');
+      if (response.data.sessionToken) {
+        // document.cookie = `sessionToken=${response.data.sessionToken}; path=/;`;
         navigator('/home');
+      }else{
+        console.log('Login failed');
       }
-    }).catch(error => {
-      console.error('There was an error!', error);
+    }).catch((error) => {
+      console.error("something went wrong", error);
     });
   };
 
