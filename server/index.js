@@ -34,8 +34,7 @@ app.post("/login", (req, res) => {
                     user.token=sessionToken;
                     user.password=undefined;
                     const options = {
-                        expires: new Date(Date.now() + 1000),
-                        httpOnly: true,
+                        expires: new Date(Date.now() + 5*60*1000),
                         sameSite: 'None',
                         secure: true,
                         domain: 'localhost',
