@@ -1,21 +1,28 @@
-import { useEffect } from 'react';
+import { useEffect,useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Navbar, Container, Nav } from 'react-bootstrap';
 import './navbar.css'
-import Cookies from 'js-cookie';
 
 const GreenNavbar = () => {
   const navigate = useNavigate();
+  const hasNavigated = useRef(false);
 
   useEffect(() => {
     const sessionToken = document.cookie.split('; ').find(cookie => cookie.startsWith('token'))?.split('=')[1] || '';
-    if (!sessionToken) {
+    if (!sessionToken && !hasNavigated.current) {
+      alert('Please login to continue');
       navigate('/login');
-    } else {
+      hasNavigated.current = true;
+    } else if (!hasNavigated.current) {
       navigate('/home');
+      hasNavigated.current = true;
     }
   }, [navigate]);
 
+  const Logout = () => {
+    document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    navigate('/login');
+  }
   return (
     <Navbar bg="success" variant="dark" expand="lg">
       <Container>
@@ -27,8 +34,7 @@ const GreenNavbar = () => {
             <Nav.Link href="#graph">Graph</Nav.Link>
           </Nav>
           <Nav>
-            <Nav.Link href="#login">Login</Nav.Link>
-            <Nav.Link href="#register">Register</Nav.Link>
+            <Nav.Link onClick={Logout}>Logout</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
