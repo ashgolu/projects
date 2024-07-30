@@ -4,8 +4,9 @@ const UserSchema= new mongoose.Schema({
     lastname:String,
     email:String,
     password:String,
-    token: String
+    exerciseLists: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ExerciseList' }],
+    dateCreated: { type: Date, default: Date.now },
 })
 
-const UserModel= mongoose.model("user",UserSchema)
+const UserModel= mongoose.model("User",UserSchema)
 module.exports= UserModel

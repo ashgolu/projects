@@ -2,6 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const UserModel = require("./models/user")
+const ExerciseList=require("./models/exerciseList")
+
 // cookie parser module
 const cookieParser = require("cookie-parser");
 const corsOptions = {
@@ -14,6 +16,8 @@ const app = express();
 app.use(express.json());
 app.use(cors(corsOptions));
 app.use(cookieParser());
+
+const auth = require("./auth/auth");
 
 // using bcrypt for password encryption
 const bcrypt = require("bcryptjs");
@@ -34,7 +38,7 @@ app.post("/login", (req, res) => {
                     user.token=sessionToken;
                     user.password=undefined;
                     const options = {
-                        expires: new Date(Date.now() + 5*60*1000),
+                        expires: new Date(Date.now() + 60*60*1000),
                         sameSite: 'None',
                         secure: true,
                         domain: 'localhost',
@@ -77,3 +81,37 @@ app.post("/register", async (req, res) => {
 app.listen(3001, () => {
     console.log("sever is running");
 })
+
+// api to post exercises
+app.post("/home/workout", auth, async (req, res) => {
+    try {
+      const { exercises } = req.body;
+      console.log('Request body:', req.body);  
+
+      console.log('Exercises:', exercises);  
+      console.log('User ID:', req.user.id);  
+  
+      if (!Array.isArray(exercises) || exercises.length === 0) {
+        return res.status(400).json({ message: "Invalid exercises array" });
+      }
+  
+      const exerciseList = new ExerciseList({
+        exercises,
+        createdBy: req.user._id,
+      });
+  
+      console.log('ExerciseList to be saved:', exerciseList);  
+  
+      await exerciseList.save();
+      console.log('ExerciseList saved:', exerciseList);  
+  
+      await UserModel.findByIdAndUpdate(req.user._id, { $push: { exerciseLists: exerciseList._id } });
+      console.log('User updated with new ExerciseList');  
+  
+      res.status(201).json(exerciseList);
+    } catch (error) {
+      console.error('Error creating exercise list:', error);
+      res.status(400).json({ message: "Error creating exercise list", error });
+    }
+  });
+  
