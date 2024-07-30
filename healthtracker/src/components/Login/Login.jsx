@@ -30,7 +30,6 @@ const LoginForm = () => {
     })
     .then(response => {
       if (response.data.sessionToken) {
-        // document.cookie = `sessionToken=${response.data.sessionToken}; path=/;`;
         navigator('/home');
       }else{
         console.log('Login failed');

@@ -4,3 +4,7 @@ nav{
         background: linear-gradient(to right, #37b8ab, #0f1e64);
         box-shadow: 0 2px 4px #0f1e64;
 }
+.nav-link a{
+        all: unset;
+        color: antiquewhite;
+}
