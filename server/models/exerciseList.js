@@ -5,5 +5,4 @@ const ExerciseListSchema= new mongoose.Schema({
     dateCreated: { type: Date, default: Date.now },
 })
 const ExerciseList = mongoose.model('ExerciseList', ExerciseListSchema);
-
 module.exports = ExerciseList;

@@ -85,33 +85,58 @@ app.listen(3001, () => {
 // api to post exercises
 app.post("/home/workout", auth, async (req, res) => {
     try {
-      const { exercises } = req.body;
-      console.log('Request body:', req.body);  
+        const userId = req.user.id; 
+        const exerciseData = req.body;
 
-      console.log('Exercises:', exercises);  
-      console.log('User ID:', req.user.id);  
-  
-      if (!Array.isArray(exercises) || exercises.length === 0) {
-        return res.status(400).json({ message: "Invalid exercises array" });
-      }
-  
-      const exerciseList = new ExerciseList({
-        exercises,
-        createdBy: req.user._id,
-      });
-  
-      console.log('ExerciseList to be saved:', exerciseList);  
-  
-      await exerciseList.save();
-      console.log('ExerciseList saved:', exerciseList);  
-  
-      await UserModel.findByIdAndUpdate(req.user._id, { $push: { exerciseLists: exerciseList._id } });
-      console.log('User updated with new ExerciseList');  
-  
-      res.status(201).json(exerciseList);
-    } catch (error) {
-      console.error('Error creating exercise list:', error);
-      res.status(400).json({ message: "Error creating exercise list", error });
+        const user = await UserModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        // Check if the exercise already exists
+        const exerciseExists = user.exerciseLists.some(exercise => exercise.name === exerciseData.name);
+        if (exerciseExists) {
+            return res.status(400).json({ error: "Exercise already exists" });
+        }
+
+        user.exerciseLists.push(exerciseData);
+        await user.save();
+
+        res.status(201).json(user.exerciseLists);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
-  });
-  
+});
+
+app.get('/home/workout', auth, async (req, res) => {
+    try {
+        const userId = req.user.id; // Assuming `auth` middleware attaches user ID to `req.user`
+        
+        const user = await UserModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        res.status(200).json(user.exerciseLists);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}); 
+app.delete('/home/workout/:exerciseId', auth, async (req, res)=>{
+    try {
+        const userId = req.user.id; 
+        const exerciseId = req.params.exerciseId;
+
+        const user = await UserModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        user.exerciseLists = user.exerciseLists.filter(exercise => exercise._id.toString() !== exerciseId);
+        await user.save();
+
+        res.status(200).json(user.exerciseLists);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
