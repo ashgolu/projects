@@ -1,17 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
-import './WorkoutTracker.css';
 import axios from 'axios';
+import './WorkoutTracker.css';
 
 const ExerciseTracker = () => {
-
-
     const [exercises, setExercises] = useState([]);
     const [newExercise, setNewExercise] = useState({ name: '' });
 
-    //this fn is handling the changes while add exercies
+    // Handle input change
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setNewExercise(prevExercise => ({
@@ -20,41 +18,70 @@ const ExerciseTracker = () => {
         }));
     };
 
-    // Add exercise to the table
-    const addExercise = () => {
-        setExercises(prevExercises => [...prevExercises, { ...newExercise, id: exercises.length + 1 }]);
-        console.log(exercises);
-    };
-    const tableListDisplay = () => {
-        return (<table>
+
+    // Display table
+    const tableListDisplay = () => (
+        <table>
             <thead>
                 <tr>
                     <th>Exercise</th>
+                    <th>ID</th>
+                    <th>Creation time</th>
+                    <th>Delete</th>
                 </tr>
             </thead>
             <tbody>
                 {exercises.map(exercise => (
-                    <tr key={exercise.id}>
+                    <tr key={exercise._id}>
                         <td>{exercise.name}</td>
+                        <td>{exercise._id}</td>
+                        <td>{exercise.date}</td>
+                        <td><button onClick={() => deleteExercise(exercise._id)}>Delete</button></td>
                     </tr>
                 ))}
             </tbody>
-        </table>)
-    }
+        </table>
+    );
+
+    // Post exercise to the backend
     const PostExercise = () => {
-        const data = newExercise;
-        console.log(data);
-        axios.post('http://localhost:3001/home/workout',{ exercises: ['Push-ups']}, {withCredentials:true}
-        ).then(response => {
-            console.log(response);
-        }).catch((err) => {
-            console.log(err);
-        })
-    }
+        axios.post('http://localhost:3001/home/workout', newExercise, { withCredentials: true })
+            .then(response => {
+                console.log(response);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    };
+
+    const fetchExercises = async () => {
+        try {
+            const response = await axios.get('http://localhost:3001/home/workout', { withCredentials: true });
+            setExercises(response.data);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+    
+
+      // Function to delete an exercise
+      const deleteExercise = async (exerciseId) => {
+        try {
+            await axios.delete(`http://localhost:3001/home/workout/${exerciseId}`, { withCredentials: true });
+            fetchExercises();
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    useEffect(() => {
+        fetchExercises();
+    }, []);
+
     return (
         <>
             <div className='Exercises'>
-                <h2> Exercises</h2>
+                <h2>Exercises</h2>
                 <div className='container'>
                     <InputGroup className="inputGroup">
                         <Form.Control
@@ -68,13 +95,9 @@ const ExerciseTracker = () => {
                             className="col-6"
                             required
                         />
-                        <Button variant="primary" id="button-addon2" onClick={addExercise}>
-                            Button
-                        </Button>
                         <Button variant="primary" id="button-addon2" onClick={PostExercise}>
                             Submit
                         </Button>
-
                     </InputGroup>
                 </div>
                 <div className="tableList">

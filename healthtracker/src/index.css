@@ -1,0 +1,35 @@
+.Exercises {
+    text-align: center;
+    margin: auto;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem; 
+}
+
+.inputGroup {
+    max-width: 50%;
+}
+
+.tableList {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem; 
+}
+
+.tableList table {
+    border-collapse: collapse;
+    width: 100%; 
+}
+
+.tableList th, .tableList td {
+    border: 1px solid #ddd; 
+    padding: 8px; 
+    text-align: left; 
+}
+
+.tableList th {
+    background-color: #f4f4f4;
+}
