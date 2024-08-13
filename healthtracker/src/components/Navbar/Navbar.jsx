@@ -36,6 +36,7 @@ const GreenNavbar = () => {
             <Nav.Link ><Link to={"/home"}>Home</Link></Nav.Link>
             <Nav.Link ><Link to="/home/graph">Graph</Link></Nav.Link>
             <Nav.Link><Link to="/home/workout">ExerciseList</Link></Nav.Link>
+            <Nav.Link><Link to="/home/exerciseData">ExerciseList</Link></Nav.Link>
           </Nav>
           <Nav>
             <Nav.Link onClick={Logout}>Logout</Nav.Link>

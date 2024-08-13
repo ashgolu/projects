@@ -6,6 +6,7 @@ import RegisterForm from "./components/Register/RegisterPage";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import {BrowserRouter,Routes,Route} from "react-router-dom";
+import ExercisData from "./components/Exercise Data/ExerciseData";
 
 const exercises = [
   { id: 1, name: 'Push-ups' },
@@ -27,6 +28,9 @@ function Router() {
         <Route path="/login" element={<Login/>}></Route>
         <Route path="/home" element={<Navbar/>}>
         <Route path="/home/workout" element={<WorkoutTracker/>}></Route>
+        </Route>
+        <Route path="/home" element={<Navbar/>}>
+        <Route path="/home/exerciseData" element={<ExercisData/>}> </Route>
         </Route>
       </Routes>
     </BrowserRouter>

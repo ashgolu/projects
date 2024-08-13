@@ -48,6 +48,8 @@ const ExerciseTracker = () => {
         axios.post('http://localhost:3001/home/workout', newExercise, { withCredentials: true })
             .then(response => {
                 console.log(response);
+                setNewExercise({ name: '' });
+                fetchExercises();
             })
             .catch(err => {
                 console.log(err);
@@ -62,10 +64,10 @@ const ExerciseTracker = () => {
             console.error(err);
         }
     };
-    
 
-      // Function to delete an exercise
-      const deleteExercise = async (exerciseId) => {
+
+    // Function to delete an exercise
+    const deleteExercise = async (exerciseId) => {
         try {
             await axios.delete(`http://localhost:3001/home/workout/${exerciseId}`, { withCredentials: true });
             fetchExercises();
