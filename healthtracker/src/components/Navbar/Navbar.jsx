@@ -1,5 +1,5 @@
-import { useEffect,useRef } from 'react';
-import { useNavigate,Link } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 import { Navbar, Container, Nav } from 'react-bootstrap';
 import './navbar.css'
@@ -27,27 +27,27 @@ const GreenNavbar = () => {
   }
   return (
     <>
-    <Navbar bg="success" variant="dark" expand="lg">
-      <Container>
-        <Navbar.Brand href="#home">HealthTracker</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link ><Link to={"/home"}>Home</Link></Nav.Link>
-            <Nav.Link ><Link to="/home/graph">Graph</Link></Nav.Link>
-            <Nav.Link><Link to="/home/workout">ExerciseList</Link></Nav.Link>
-            <Nav.Link><Link to="/home/exerciseData">ExerciseList</Link></Nav.Link>
-          </Nav>
-          <Nav>
-            <Nav.Link onClick={Logout}>Logout</Nav.Link>
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
-    <div className="content">
+      <Navbar bg="success" variant="dark" expand="lg">
+        <Container>
+          <Navbar.Brand href="#home">HealthTracker</Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="me-auto">
+              <Nav.Link ><Link to={"/home"}>Home</Link></Nav.Link>
+              <Nav.Link ><Link to="/home/graph">Graph</Link></Nav.Link>
+              <Nav.Link><Link to="/home/workout">ExerciseList</Link></Nav.Link>
+              <Nav.Link><Link to="/home/exerciseData">Exercise Data</Link></Nav.Link>
+            </Nav>
+            <Nav>
+              <Nav.Link onClick={Logout}>Logout</Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+      <div className="content">
         <Outlet />
       </div>
-      </>
+    </>
   );
 };
 

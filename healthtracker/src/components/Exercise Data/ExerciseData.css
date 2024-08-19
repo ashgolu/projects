@@ -1,0 +1,95 @@
+/* ExerciseData.css */
+.exercise-container {
+    position: relative;
+    width: 720px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    overflow-y: auto;
+}
+
+.exercise-container input[type="text"] {
+    width: 50%;
+    padding: 8px;
+    box-sizing: border-box;
+    border-top-left-radius: .5rem;
+    border-top-right-radius: .5rem;
+    margin: auto;
+}
+
+
+.options-list {
+    list-style-type: none;
+    border: 1px solid #ccc;
+    border-top: none;
+    border-bottom-left-radius: .5rem;
+    border-bottom-right-radius: .5rem;
+    max-height: 150px;
+    overflow-y: auto;
+    background-color: white;
+    width: 49.5%;
+    padding: 0;
+    margin: auto;
+}
+
+
+.options-list::-webkit-scrollbar {
+    display: none;
+}
+
+
+.options-list li {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.options-list li:hover {
+    background-color: #f0f0f0;
+}
+
+.selected-exercises-table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+.selected-exercises-table th,
+.selected-exercises-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+.selected-exercises-table th {
+    background-color: #f8f8f8;
+    border: transparent;
+    border-bottom: 1px solid black;
+}
+
+.selected-exercises-table button {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.selected-exercises-table button:hover {
+    background-color: darkred;
+}
+
+.selected-exercises-table td {
+    background-color: white;
+    border: transparent;
+    border-bottom: 1px solid black;
+}
+.selected-exercises-table td input{
+    width: 100%;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
