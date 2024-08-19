@@ -2,13 +2,13 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const UserModel = require("./models/user")
-const ExerciseList=require("./models/exerciseList")
+
 
 // cookie parser module
 const cookieParser = require("cookie-parser");
 const corsOptions = {
     origin: "http://localhost:3000",
-    credentials: true 
+    credentials: true
 };
 
 // middleware
@@ -34,21 +34,21 @@ app.post("/login", (req, res) => {
             if (user) {
                 const isPasswordCorrect = await bcrypt.compare(password, user.password);
                 if (isPasswordCorrect) {
-                    const sessionToken=jwt.sign({id: user._id},"secretkey",{expiresIn: "1h"})
-                    user.token=sessionToken;
-                    user.password=undefined;
+                    const sessionToken = jwt.sign({ id: user._id }, "secretkey", { expiresIn: "1h" })
+                    user.token = sessionToken;
+                    user.password = undefined;
                     const options = {
-                        expires: new Date(Date.now() + 60*60*1000),
+                        expires: new Date(Date.now() + 60 * 60 * 1000),
                         sameSite: 'None',
                         secure: true,
                         domain: 'localhost',
                         path: '/'
-                      };
-                    res.status(200).cookie("token", sessionToken, options).json({success:true,sessionToken,user,options})
+                    };
+                    res.status(200).cookie("token", sessionToken, options).json({ success: true, sessionToken, user, options })
                     console.log(sessionToken);
-                   
+
                 } else {
-                        res.status(400).send({ message: "incorrect password" })
+                    res.status(400).send({ message: "incorrect password" })
                 }
             } else {
                 res.status(400).send({ message: "user not registered" })
@@ -85,7 +85,7 @@ app.listen(3001, () => {
 // api to post exercises
 app.post("/home/workout", auth, async (req, res) => {
     try {
-        const userId = req.user.id; 
+        const userId = req.user.id;
         const exerciseData = req.body;
 
         const user = await UserModel.findById(userId);
@@ -93,7 +93,6 @@ app.post("/home/workout", auth, async (req, res) => {
             return res.status(404).json({ error: "User not found" });
         }
 
-        // Check if the exercise already exists
         const exerciseExists = user.exerciseLists.some(exercise => exercise.name === exerciseData.name);
         if (exerciseExists) {
             return res.status(400).json({ error: "Exercise already exists" });
@@ -111,7 +110,7 @@ app.post("/home/workout", auth, async (req, res) => {
 app.get('/home/workout', auth, async (req, res) => {
     try {
         const userId = req.user.id; // Assuming `auth` middleware attaches user ID to `req.user`
-        
+
         const user = await UserModel.findById(userId);
         if (!user) {
             return res.status(404).json({ error: "User not found" });
@@ -121,10 +120,10 @@ app.get('/home/workout', auth, async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
-}); 
-app.delete('/home/workout/:exerciseId', auth, async (req, res)=>{
+});
+app.delete('/home/workout/:exerciseId', auth, async (req, res) => {
     try {
-        const userId = req.user.id; 
+        const userId = req.user.id;
         const exerciseId = req.params.exerciseId;
 
         const user = await UserModel.findById(userId);
@@ -140,3 +139,42 @@ app.delete('/home/workout/:exerciseId', auth, async (req, res)=>{
         res.status(500).json({ error: err.message });
     }
 });
+
+app.post('/home/workout/exerciseData', auth, async (req, res) => {
+    try {
+        const { date, exercises } = req.body;
+
+        if (!date || !exercises || !Array.isArray(exercises)) {
+            return res.status(400).json({ error: 'Invalid data format' });
+        }
+
+        const userId = req.user.id;
+
+        const user = await UserModel.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        let existingDateData = user.exerciseData.find(entry => entry.date === date);
+
+
+        if (existingDateData) {
+            existingDateData.exercises = exercises;
+        } else {
+            user.exerciseData.push({ date, exercises });
+        }
+
+        await user.save();
+        res.status(201).json({ message: 'Exercise data saved successfully' });
+    } catch (error) {
+        console.error('Error saving exercise data:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+
+
+
+
+
