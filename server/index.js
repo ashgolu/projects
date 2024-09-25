@@ -173,7 +173,18 @@ app.post('/home/workout/exerciseData', auth, async (req, res) => {
     }
 });
 
-
+app.get("/home/workout/exerciseData",auth,async(req,res)=>{
+    try {
+        const userId = req.user.id;
+        const user = await UserModel.findById(userId);
+        if(!user){
+            return res.status(404).json({error:"user not found"});
+        }
+        res.status(200).json(user.exerciseData)
+    } catch (error) {
+        
+    }
+})
 
 
 
